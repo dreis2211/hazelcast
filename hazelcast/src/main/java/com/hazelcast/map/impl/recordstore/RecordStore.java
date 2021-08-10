@@ -673,4 +673,12 @@ public interface RecordStore<R extends Record> {
     LocalRecordStoreStatsImpl getStats();
 
     void setStats(LocalRecordStoreStats stats);
+
+    default void beforeOperation() {
+        // do nothing
+    }
+
+    default void afterOperation() {
+        // do nothing
+    }
 }

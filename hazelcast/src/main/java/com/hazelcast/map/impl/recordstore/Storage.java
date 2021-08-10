@@ -135,4 +135,12 @@ public interface Storage<K, R> {
     Data extractDataKeyFromLazy(EntryView entryView);
 
     Data toBackingDataKeyFormat(Data key);
+
+    default void beforeOperation() {
+        // do nothing
+    }
+
+    default void afterOperation() {
+        // do nothing
+    }
 }

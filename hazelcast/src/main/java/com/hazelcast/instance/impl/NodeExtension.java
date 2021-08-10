@@ -352,6 +352,10 @@ public interface NodeExtension {
 
     ManagementService createJMXManagementService(HazelcastInstanceImpl instance);
 
+    default void initializeEpoch() {
+        // do nothing
+    }
+
     TextCommandService createTextCommandService();
 
     /**
