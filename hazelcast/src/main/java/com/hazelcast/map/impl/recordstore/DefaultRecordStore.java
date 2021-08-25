@@ -906,7 +906,7 @@ public class DefaultRecordStore extends AbstractEvictableRecordStore {
             putNewRecord(key, oldValue, newValue, ttl, maxIdle, expiryTime, now,
                     transactionId, putFromLoad ? LOADED : ADDED, store, backup);
         } else {
-            updateRecord(record, key, oldValue, newValue, ttl, maxIdle, expiryTime, now,
+            oldValue = updateRecord(record, key, oldValue, newValue, ttl, maxIdle, expiryTime, now,
                     transactionId, store, countAsAccess, backup);
         }
         return oldValue;
@@ -933,7 +933,7 @@ public class DefaultRecordStore extends AbstractEvictableRecordStore {
     }
 
     @SuppressWarnings("checkstyle:parameternumber")
-    protected void updateRecord(Record record, Data key, Object oldValue, Object newValue,
+    protected Object updateRecord(Record record, Data key, Object oldValue, Object newValue,
                                 long ttl, long maxIdle, long expiryTime, long now, UUID transactionId,
                                 boolean store, boolean countAsAccess, boolean backup) {
         updateStatsOnPut(countAsAccess, now);
@@ -948,9 +948,10 @@ public class DefaultRecordStore extends AbstractEvictableRecordStore {
                     ttl, maxIdle, now, transactionId);
         }
 
-        storage.updateRecordValue(key, record, newValue);
+        Object oldValueData = storage.updateRecordValue(key, record, newValue);
         expirySystem.addKeyIfExpirable(key, ttl, maxIdle, expiryTime, now);
         mutationObserver.onUpdateRecord(key, record, oldValue, newValue, backup);
+        return oldValueData;
     }
 
     private Record getOrLoadRecord(@Nullable Record record, Data key,
